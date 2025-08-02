@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تسريع روابط MP4</title>
+  <style>
+    body {
+      background: #111;
+      color: #fff;
+      font-family: Tahoma, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      margin: 10px;
+      width: 300px;
+      border: none;
+      border-radius: 5px;
+    }
+    input {
+      background: #fff;
+      color: #000;
+    }
+    button {
+      background: #ffcc00;
+      cursor: pointer;
+    }
+    .output {
+      margin-top: 20px;
+      direction: ltr;
+      color: #0f0;
+      word-break: break-all;
+    }
+    video {
+      margin-top: 20px;
+      max-width: 90%;
+      border: 2px solid #ffcc00;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h2>🎥 رابط مباشر سريع لفيديو MP4</h2>
+  <input type="text" id="originalUrl" placeholder="أدخل رابط الفيديو هنا">
+  <button onclick="generate()">🔁 توليد رابط سريع</button>
+  <div class="output" id="output"></div>
+  <video id="preview" controls style="display:none;"></video>
+
+  <script>
+    function generate() {
+      const input = document.getElementById("originalUrl").value;
+      const workerBase = "https://holy-frog-02daf.alginawi656.workers.dev/?url=";
+      const encodedUrl = encodeURIComponent(input).replace(/%20/g, "%2520");
+      const result = workerBase + encodedUrl;
+
+      document.getElementById("output").innerHTML = `<a href="${result}" target="_blank">${result}</a>`;
+
+      const video = document.getElementById("preview");
+      video.src = result;
+      video.style.display = 'block';
+    }
+  </script>
+</body>
+</html>

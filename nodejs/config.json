@@ -1,0 +1,16 @@
+{
+    "db_hostname": "",
+    "db_username": "u288274812_abwab",
+    "db_password": "123456qwertyO@",
+    "db_dbname": "u288274812_abwab",
+    "site_url": "https:\/\/www.abwabgo.com",
+    "server_ip": "212.107.17.235",
+    "server_port": 4545,
+    "amazon": false,
+    "amazon_bucket": "",
+    "nodejs_message_update_interval": 500,
+    "ajax_message_update_interval": 3000,
+    "ssl": false,
+    "ssl_privatekey_full_path": "",
+    "ssl_cert_full_path": ""
+}

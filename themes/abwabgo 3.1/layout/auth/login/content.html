@@ -1,0 +1,128 @@
+<div class="vp_auth_page">
+	<div class="login_page">
+		<div class="login-page">
+			<div class="login-form">
+				<h4>{{LANG login_}}</h4>
+				<p>{{LANG welcome_back}}</p>
+				<?php if (
+					$pt->config->fb_login == 'on' ||
+					$pt->config->plus_login == 'on' ||
+					$pt->config->tw_login == 'on' ||
+					$pt->config->linkedin_login == 'on' ||
+					$pt->config->vkontakte_login == 'on' ||
+					$pt->config->instagram_login == 'on' ||
+					$pt->config->qq_login == 'on' ||
+					$pt->config->wechat_login == 'on' ||
+					$pt->config->discord_login == 'on' ||
+					$pt->config->mailru_login == 'on' ||
+					$pt->config->wowonder_login == 'on' ||
+					$pt->config->tiktok_login == 'on'
+				) { ?>
+					<div class="text-center login-icons">
+						<?php if ($pt->config->fb_login == 'on') { ?>
+							<div>
+								<a href="javascript:void(0)" onclick="SLogin('Facebook')"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="background-color: #2d4373;"><path fill="currentColor" d="M17,2V2H17V6H15C14.31,6 14,6.81 14,7.5V10H14L17,10V14H14V22H10V14H7V10H10V6A4,4 0 0,1 14,2H17Z"/></svg></a>
+							</div>
+						<?php } ?>
+						<?php if ($pt->config->tw_login == 'on') { ?>
+							<div>
+								<a href="javascript:void(0)" onclick="SLogin('Twitter')"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="background-color: #000;"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 4l11.733 16h4.267l-11.733 -16z"/><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"/></svg></a>
+							</div>
+						<?php } ?>
+						<?php if ($pt->config->linkedin_login == 'on') { ?>
+							<div>
+								<a href="javascript:void(0)" onclick="SLogin('LinkedIn')" title="{{LANG Login with LinkedIn}}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="background-color: #007bb6;"><path fill="currentColor" d="M19 3A2 2 0 0 1 21 5V19A2 2 0 0 1 19 21H5A2 2 0 0 1 3 19V5A2 2 0 0 1 5 3H19M18.5 18.5V13.2A3.26 3.26 0 0 0 15.24 9.94C14.39 9.94 13.4 10.46 12.92 11.24V10.13H10.13V18.5H12.92V13.57C12.92 12.8 13.54 12.17 14.31 12.17A1.4 1.4 0 0 1 15.71 13.57V18.5H18.5M6.88 8.56A1.68 1.68 0 0 0 8.56 6.88C8.56 5.95 7.81 5.19 6.88 5.19A1.69 1.69 0 0 0 5.19 6.88C5.19 7.81 5.95 8.56 6.88 8.56M8.27 18.5V10.13H5.5V18.5H8.27Z"/></svg></a>
+							</div>
+						<?php } ?>
+						<div class="g_id_signin" data-type="standard"></div>
+                        <div id="buttonDiv"></div>
+					</div>
+				<?php } ?>
+				<form action="" method="POST">
+					<div class="errors form-group">{{ERRORS}}</div>
+					<div class="pp_mat_input">
+						<input type="text" name="username" id="username" placeholder="{{LANG username}}" required autofocus>
+						<label for="username">{{LANG username}}</label>
+					</div>
+					<div class="pp_mat_input">
+						<input type="password" name="password" id="password" placeholder="{{LANG password}}" required>
+						<label for="password">{{LANG password}}</label>
+					</div>
+					<div class="forgot_password">
+						<a href="{{LINK forgot_password}}">{{LANG forgot_your_password}}</a>
+					</div>
+					<button type="submit" class="btn btn_primary button">{{LANG login_}} <svg width="38" height="38" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg" stroke="#fff"><g fill="none" fill-rule="evenodd"><g transform="translate(1 1)" stroke-width="2"><circle stroke-opacity=".5" cx="18" cy="18" r="18"/><path d="M36 18c0-9.94-8.06-18-18-18"><animateTransform attributeName="transform" type="rotate" from="0 18 18" to="360 18 18" dur="1s" repeatCount="indefinite"/></path></g></g></svg></button>
+					<div class="clear"></div>
+					<?php if ($pt->config->remember_device == 1) { ?>
+						<div class="terms">
+							<label class="device" for="remember_device">
+								<input type="checkbox" name="remember_device" id="remember_device" <?php echo ($pt->config->remember_device == 1 ? 'checked' : ''); ?>> {{LANG remember_device}}
+							</label>
+							<div class="clear"></div>
+						</div>
+					<?php } ?>
+				</form>
+			</div>
+		</div>
+	</div>
+	<?php if ($pt->config->user_registration == 'on') { ?>
+	<div class="login_aside">
+		<div class="vp_auth_circle-1"></div>
+		<div class="vp_auth_circle-2"></div>
+		<div class="vp_auth_circle-3"></div>
+		<div class="login_aside_innr">
+			<h2>{{LANG new_here}}</h2>
+			<p>{{LANG start_features}}. {{LANG lets_get_started}}</p>
+			<a class="btn" href="{{LINK register}}">{{LANG sign_up}}</a>
+		</div>
+	</div>
+	<?php } ?>
+</div>
+
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script>
+<?php if ($pt->config->plus_login == 'on') { ?>
+function handleCredentialResponse(response) {
+	var id_token = response.credential;
+	$.post('{{LINK aj/google_login}}?hash=' + $('.main_session').val(), {id_token: id_token}, function(data) {
+		if (data.status == 200) {
+			window.location.href = data.location;
+		} else {
+			$('.errors').html(data.message);
+		}
+	});
+}
+window.onload = function () {
+	google.accounts.id.initialize({
+		client_id: "{{CONFIG google_app_ID}}",
+		callback: handleCredentialResponse,
+		auto_select: true,
+		cancel_on_tap_outside: false
+	});
+	google.accounts.id.prompt(function(notification) {
+            if (notification.isNotDisplayed() && notification.getNotDisplayedReason() === 'opt_out_or_no_session') {
+                google.accounts.id.disableAutoSelect();
+                google.accounts.id.prompt();
+            }
+        });
+        google.accounts.id.renderButton(
+            document.getElementById('buttonDiv'),
+            { theme: 'outline', size: 'large' }
+        );
+};
+<?php } ?>
+$(function() {
+	$('.button').on('click', function () {
+		if ($('#username').val() && $('#password').val()) {
+			$(this).addClass("btn_loading");
+		}
+	});
+});
+function SLogin(provider) {
+	$.post('{{LINK aj/provider}}?hash=' + $('.main_session').val(), {provider: provider}, function(data) {
+		if (data.status == 200) {
+			location.href = data.location;
+		}
+	});
+}
+</script>

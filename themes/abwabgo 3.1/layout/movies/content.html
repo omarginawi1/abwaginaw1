@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>المسلسلات والأفلام</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #1e1e1e;
+      --card-bg: #2a2a2a;
+      --text: #f0f0f0;
+      --accent: #ffcc00;
+      --radius: 8px;
+      --shadow: 0 2px 8px rgba(0,0,0,0.7);
+    }
+    *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body, h1, h2, h3, p, button, input, select {
+      font-family: 'Cairo', sans-serif !important;
+      font-weight: 600 !important;
+      line-height: 2 !important;
+      color: var(--text) !important;
+    }
+    header { padding:1rem; background:var(--card-bg); box-shadow:var(--shadow); text-align:center; }
+    header h1 {
+      color: var(--accent) !important;
+      font-size: 3rem !important;
+      font-weight: 700 !important;
+      margin-bottom: 0.5rem !important;
+    }
+    .controls {
+      display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:.5rem;
+      padding:.75rem; background:var(--card-bg);
+    }
+    .controls button,
+    .controls select,
+    .controls input[type="text"] {
+      padding:.5rem 1rem;
+      border:none; border-radius:var(--radius);
+      background:#2a2a2a; color:var(--text); font-size:.95rem;
+    }
+    .controls button { cursor:pointer; min-width:80px; font-weight:bold; }
+    .controls button.active { background:var(--accent); color:var(--bg); }
+    .controls select { min-width:120px; }
+    .controls input[type="text"] { flex:1; max-width:200px; }
+
+    main { max-width:1200px; margin:auto; padding:1rem; }
+    section { margin-top:1rem; }
+    section h2 {
+      color: var(--accent) !important;
+      font-size: 2rem !important;
+      font-weight: 700 !important;
+      text-align: center !important;
+      margin-bottom: 0.5rem !important;
+    }
+    .grid {
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:1rem;
+      justify-items:center;
+    }
+    .card-link {
+      display:block; text-decoration:none; color:inherit;
+      width:100%; max-width:260px; transition:transform .2s;
+    }
+    .card-link:hover { transform:translateY(-4px); }
+    .card {
+      background:var(--card-bg); border-radius:var(--radius);
+      overflow:hidden; box-shadow:var(--shadow);
+      display:flex; flex-direction:column; height:100%;
+    }
+    .card img {
+      width:100%; aspect-ratio:3/4; object-fit:cover;
+    }
+    .card-content {
+      padding:1rem; display:flex; flex-direction:column; gap:.4rem; flex:1;
+    }
+    .card-content h3 {
+      color: var(--accent) !important;
+      font-size: 1.5rem !important;
+      font-weight: 700 !important;
+      text-align: center !important;
+      margin-bottom: 0.5rem !important;
+    }
+    .card-content p {
+      font-size:.1.1rem; text-align:right; color:#ddd; flex:1;
+    }
+    .pagination {
+      display:flex; justify-content:center; align-items:center; gap:.5rem;
+      padding:1rem;
+    }
+    .pagination button {
+      padding:.4rem .8rem; border:none; border-radius:var(--radius);
+      background:#2a2a2a; color:var(--text); cursor:pointer;
+    }
+    .pagination button.active { background:var(--accent); color:var(--bg); }
+    .pagination button:disabled { opacity:.5; cursor:not-allowed; }
+
+    @media(max-width:900px) {
+      .grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media(max-width:600px) {
+      header h1 { font-size:1.5rem !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>المسلسلات والأفلام</h1>
+    <div class="controls">
+      <button data-type="series" class="active">المسلسلات</button>
+      <button data-type="movies">أفلام</button>
+      <select id="genreSelect">
+        <option value="all">جميع التصنيفات</option>
+        <option value="action">أكشن</option>
+        <option value="adventure">مغامرات</option>
+        <option value="drama">دراما</option>
+        <option value="Educational">تعليمي - أطفال</option>
+        <option value="Purposeful">هادف</option>
+      </select>
+      <input id="search" type="text" placeholder="ابحث بالاسم أو الوصف...">
+    </div>
+  </header>
+
+  <main>
+    <section id="series">
+      <h2>المسلسلات</h2>
+      <div class="grid" id="items-series">
+        <!-- Template card (use Base64 in data-src) -->
+        <a href="https://www.abwabgo.com/watch/%D9%83%D8%B1%D8%AA%D9%88%D9%86-%D9%86%D8%B3%D8%A7%D8%A1-%D8%B5%D8%BA%D9%8A%D8%B1%D8%A7%D8%AA-%D8%A7%D9%84%D8%AD%D9%84%D9%82%D8%A9-1-%D8%A8%D8%AF%D9%88%D9%86-%D9%85%D9%88%D8%B3%D9%8A%D9%82%D9%89-full-hd_o5GZxA4UEomGQtS.html/list/1FU4QusqFxjjnDJ" class="card-link" data-type="series" data-genre="drama">
+  <div class="card">
+    <img src="https://archive.org/download/1000056625-7-11zon/1000056649_1_11zon.jpg" alt="نساء صغيرات" loading="eager">
+    <div class="card-content">
+      <h3>نساء صغيرات</h3>
+      <p>مكتمل</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/watch/%D8%A7%D9%84%D9%85%D8%AD%D9%82%D9%82-%D9%83%D9%88%D9%86%D8%A7%D9%86-%D8%A7%D9%84%D8%AD%D9%84%D9%82%D8%A9-1-%D8%A3%D8%B4%D9%87%D8%B1-%D9%85%D8%AA%D8%AD%D8%B1-%D9%81%D9%8A-%D9%87%D8%B0%D8%A7-%D8%A7%D9%84%D8%B9%D8%B5%D8%B1-%D8%A8%D8%AF%D9%88%D9%86-%D9%85%D9%88%D8%B3%D9%8A%D9%82%D9%89_8QM8diDcdnbgS4o.html/list/tmWqZmKTYD1TF1R" class="card-link" data-type="series" data-genre="action">
+  <div class="card">
+    <img src="https://archive.org/download/1000056625-7-11zon/1000056490_14_11zon.jpg" alt="المحقق كونان" loading="eager">
+    <div class="card-content">
+      <h3>المحقق كونان</h3>
+      <p>الجزء الأول</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/watch/%D8%A7%D9%84%D9%85%D8%AD%D9%82%D9%82-%D9%83%D9%88%D9%86%D8%A7%D9%86-%D8%A7%D9%84%D8%AD%D9%84%D9%82%D8%A9-17-%D8%B1%D8%A7%D9%8A%D8%A9-%D8%A7%D9%84%D8%A8%D8%B7%D9%88%D9%84%D8%A9-%D8%A8%D8%AF%D9%88%D9%86-%D9%85%D9%88%D8%B3%D9%8A%D9%82%D9%89-full-hd_8rHeaDk3KS7ogwE.html/list/2ZeEcOxUOdJC9J6" class="card-link" data-type="series" data-genre="action">
+  <div class="card">
+    <img src="https://archive.org/download/1000056625-7-11zon/1000056490_14_11zon.jpg" alt="المحقق كونان" loading="eager">
+    <div class="card-content">
+      <h3>المحقق كونان</h3>
+      <p>الجزء الثاني</p>
+    </div>
+  </div>
+</a>
+<a href="https://www.abwabgo.com/watch/%D8%B3%D9%8A%D9%81-%D8%A7%D9%84%D8%B5%D8%A7%D8%B9%D9%82%D8%A9-%D8%A7%D9%84%D8%AD%D9%84%D9%82%D8%A9-1-%D8%A8%D8%AF%D9%88%D9%86-%D9%85%D9%88%D8%B3%D9%8A%D9%82%D9%89-hd_WN1nqAhpv95x2wy.html/list/qFCBDBSkwTUom9x" class="card-link" data-type="series" data-genre="action">
+  <div class="card">
+    <img src="https://dn721503.ca.archive.org/0/items/1000056625-7-11zon/%D8%B3%D9%8A%D9%81%20%D8%A7%D9%84%D8%B5%D8%A7%D8%B9%D9%82%D8%A9.jpg" alt="سيف الصاعقة" loading="eager">
+    <div class="card-content">
+      <h3>سيف الصاعقة</h3>
+      <p>مكتمل</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/watch/%D9%83%D8%B1%D8%AA%D9%88%D9%86-%D8%A7%D9%84%D8%B3%D9%8A%D8%AF%D8%A9-%D9%85%D9%84%D8%B9%D9%82%D8%A9-%D8%A7%D9%84%D8%AD%D9%84%D9%82%D8%A9-1-%D8%A8%D8%AF%D9%88%D9%86-%D9%85%D9%88%D8%B3%D9%8A%D9%82%D9%89-full-hd_z4rJGNwXLSpnq2H.html/list/NrdI5DHlNUSm1oS" class="card-link" data-type="series" data-genre="adventure">
+  <div class="card">
+    <img src="https://ia801803.us.archive.org/24/items/1000056625-7-11zon/1000056625_7_11zon.jpg" alt="السيدة ملعقة" loading="eager">
+    <div class="card-content">
+      <h3>السيدة ملعقة</h3>
+      <p> </p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/watch/%D9%83%D8%B1%D8%AA%D9%88%D9%86-%D8%AA%D9%88%D9%85-%D9%88%D8%AC%D9%8A%D8%B1%D9%8A-%D8%A7%D9%84%D9%85%D8%AD%D9%82%D9%82%D8%A7%D9%86-%D8%A8%D8%AF%D9%88%D9%86-%D9%85%D9%88%D8%B3%D9%8A%D9%82%D9%89_Dw7DLv5HWpZi6IY.html/list/JrE7EmNQgeCUxSF" class="card-link" data-type="series" data-genre="adventure">
+  <div class="card">
+    <img src="https://dn721503.ca.archive.org/0/items/1000056625-7-11zon/1000056621_10_11zon.jpg" alt="توم وجيري" loading="eager">
+    <div class="card-content">
+      <h3>توم وجيري</h3>
+      <p> </p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/watch/%D8%A7%D9%84%D9%85%D8%AD%D9%82%D9%82-%D9%83%D9%88%D9%86%D8%A7%D9%86-%D8%A7%D9%84%D9%85%D8%B4%D9%87%D8%AF-%D8%A7%D9%84%D9%83%D8%A7%D8%B0%D8%A8-%D8%A7%D9%84%D8%AD%D9%84%D9%82%D8%A9-33-%D8%A8%D8%AF%D9%88%D9%86-%D9%85%D9%88%D8%B3%D9%8A%D9%82%D9%89-full-hd_wXU1rVptYzMIief.html/list/IXLSbZqEsQoBjuU" class="card-link" data-type="series" data-genre="action">
+  <div class="card">
+    <img src="https://archive.org/download/1000056625-7-11zon/1000056490_14_11zon.jpg" alt="المحقق كونان" loading="eager">
+    <div class="card-content">
+      <h3>المحقق كونان</h3>
+      <p>الجزء الثالث</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/watch/%D8%A7%D9%84%D9%85%D8%AD%D9%82%D9%82-%D9%83%D9%88%D9%86%D8%A7%D9%86-%D8%A7%D9%84%D9%82%D9%84%D8%B9%D8%A9-%D8%A7%D9%84%D8%B2%D8%B1%D9%82%D8%A7%D8%A1-%D8%A7%D9%84%D8%AC%D8%B2%D8%A1-%D8%A7%D9%84%D8%A3%D9%88%D9%84-%D8%A8%D8%AF%D9%88%D9%86-%D9%85%D9%88%D8%B3%D9%8A%D9%82%D9%89_svU61PuXmdIckFo.html/list/tIfIicwTR7eLSuW" class="card-link" data-type="series" data-genre="action">
+  <div class="card">
+    <img src="https://archive.org/download/1000056625-7-11zon/1000056490_14_11zon.jpg" alt="المحقق كونان" loading="eager">
+    <div class="card-content">
+      <h3>المحقق كونان</h3>
+      <p>الجزء الرابع</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/watch/%D8%A7%D9%84%D9%85%D8%AD%D9%82%D9%82-%D9%83%D9%88%D9%86%D8%A7%D9%86-%D8%A5%D9%86%D8%AA%D9%82%D8%A7%D9%85-%D8%A7%D9%84%D9%8A%D9%86%D8%A7%D8%A8%D9%8A%D8%B9-%D8%A7%D9%84%D8%AC%D8%B2%D8%A1-%D8%A7%D9%84%D8%A3%D9%88%D9%84-%D8%A8%D8%AF%D9%88%D9%86-%D9%85%D9%88%D8%B3%D9%8A%D9%82%D9%89_VH5nsT2CtbpmMS1.html/list/SlQCOCoPJXvIAZv" class="card-link" data-type="series" data-genre="action">
+  <div class="card">
+    <img src="https://archive.org/download/1000056625-7-11zon/1000056490_14_11zon.jpg" alt="المحقق كونان" loading="eager">
+    <div class="card-content">
+      <h3>المحقق كونان</h3>
+      <p>الجزء التاسع</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/watch/%D8%A7%D9%84%D9%85%D8%AD%D9%82%D9%82-%D9%83%D9%88%D9%86%D8%A7%D9%86-%D9%85%D8%B2%D8%B1%D8%B9%D8%A9-%D8%A7%D9%84%D8%B4%D9%85%D8%A7%D9%85-%D8%A8%D8%AF%D9%88%D9%86-%D9%85%D9%88%D8%B3%D9%8A%D9%82%D9%89-full-hd_Ww71cM9x2nb9VeF.html/list/JmOznNR9AzSNXNq" class="card-link" data-type="series" data-genre="action">
+  <div class="card">
+    <img src="https://archive.org/download/1000056625-7-11zon/1000056490_14_11zon.jpg" alt="المحقق كونان" loading="eager">
+    <div class="card-content">
+      <h3>المحقق كونان</h3>
+      <p>الحلقات الحديث</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/watch/%D9%83%D8%B1%D8%AA%D9%88%D9%86-%D8%AC%D9%88%D9%84%D9%8A-%D8%A7%D9%84%D8%B2%D9%87%D8%B1%D8%A9-%D8%A7%D9%84%D8%A8%D8%B1%D9%8A%D8%A9-%D8%A7%D9%84%D8%AD%D9%84%D9%82%D8%A9-1-%D8%A8%D8%AF%D9%88%D9%86-%D9%85%D9%88%D8%B3%D9%8A%D9%82%D9%89_OwZB2xBCZjAPNDA.html/list/poFOgS5ZOhePxtF" class="card-link" data-type="series" data-genre="drama">
+  <div class="card">
+    <img src="https://ia801803.us.archive.org/24/items/1000056625-7-11zon/1000056491_13_11zon.jpg" alt="جولي الزهرة البرية" loading="eager">
+    <div class="card-content">
+      <h3>جولي الزهرة البرية</h3>
+      <p>مكتمل</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/watch/%D9%83%D8%B1%D8%AA%D9%88%D9%86-%D9%85%D8%AE%D9%84%D8%B5-%D8%B5%D8%AF%D9%8A%D9%82-%D8%A7%D9%84%D8%AD%D9%8A%D9%88%D8%A7%D9%86-%D8%A7%D9%84%D8%AD%D9%84%D9%82%D8%A9-1-%D8%A7%D9%84%D8%AD%D8%B5%D8%A7%D9%86-%D8%A7%D9%84%D8%A3%D8%B3%D9%88%D8%AF-%D8%A8%D8%AF%D9%88%D9%86-%D9%85%D9%88%D8%B3%D9%8A%D9%82%D9%89-hd-%D9%83%D8%B1%D8%AA%D9%88%D9%86-%D8%A3%D8%B7%D9%81%D8%A7%D9%84-%D8%A8%D8%AF%D9%88%D9%86-%D9%85%D9%88%D8%B3%D9%8A%D9%82%D9%89_hyURFwyi6F7cVWF.html/list/rZWWfFeVIpLUiXX" class="card-link" data-type="series" data-genre="adventure">
+  <div class="card">
+    <img src="https://dn721503.ca.archive.org/0/items/1000056625-7-11zon/1000056646_2_11zon.jpg" alt="مخلص صديق الحيوان" loading="eager">
+    <div class="card-content">
+      <h3>مخلص صديق الحيوان</h3>
+      <p> </p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/watch/%D9%83%D8%B1%D8%AA%D9%88%D9%86-%D8%A7%D8%AD%D9%84%D9%89-%D8%A7%D9%84%D8%A7%D9%8A%D8%A7%D9%85-%D8%A7%D9%84%D8%AD%D9%84%D9%82%D8%A9-1-%D8%A8%D8%AF%D9%88%D9%86-%D9%85%D9%88%D8%B3%D9%8A%D9%82%D9%89_Tu6TNZdpiMGPxN8.html/list/23aL6diN3i6Mikj" class="card-link" data-type="series" data-genre="drama">
+  <div class="card">
+    <img src="https://archive.org/download/1000056625-7-11zon/%D8%A7%D8%AD%D9%84%D9%89%20%D8%A7%D9%84%D8%A7%D9%8A%D8%A7%D9%85.jpg" alt="احلى الايام" loading="eager">
+    <div class="card-content">
+      <h3>احلى الايام</h3>
+      <p> مكتمل</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/watch/%D9%83%D8%B1%D8%AA%D9%88%D9%86-%D9%82%D8%B5%D8%B5-%D8%A8%D8%B7%D9%88%D8%B7%D9%8A%D8%A9-1-quot-%D8%A3%D8%A8%D9%88-%D8%B9%D8%B6%D9%84-quot-%D8%A8%D8%AF%D9%88%D9%86-%D9%85%D9%88%D8%B3%D9%8A%D9%82%D9%89_ee2sXV81t21C4qH.html/list/p5PQIjKIOKuRrG7" class="card-link" data-type="series" data-genre="adventure">
+  <div class="card">
+    <img src="https://ia801803.us.archive.org/24/items/1000056625-7-11zon/1000056620_11_11zon.jpg" alt="قصص بطوطية" loading="eager">
+    <div class="card-content">
+      <h3>قصص بطوطية</h3>
+      <p>   </p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/watch/%D9%83%D8%B1%D8%AA%D9%88%D9%86-%D9%85%D8%A7%D8%B1%D9%88%D9%83%D9%88-%D8%A7%D9%84%D8%B5%D8%BA%D9%8A%D8%B1%D8%A9-%D8%A7%D9%84%D8%AD%D9%84%D9%82%D8%A9-1-%D8%A8%D8%AF%D9%88%D9%86-%D9%85%D9%88%D8%B3%D9%8A%D9%82%D9%89-full-hd_lerouaYe99Wmlso.html/list/PhXtBkmqnWHA6iM" class="card-link" data-type="series" data-genre="adventure">
+  <div class="card">
+    <img src="https://ia601803.us.archive.org/24/items/1000056625-7-11zon/1000056623_8_11zon.jpg" alt="ماروكو الصغيرة" loading="eager">
+    <div class="card-content">
+      <h3>ماروكو الصغيرة</h3>
+      <p>الجزء الأول</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/watch/%D8%B1%D9%8A%D9%85%D9%8A-%D8%A7%D9%84%D9%81%D8%AA%D9%89-%D8%A7%D9%84%D8%B4%D8%B1%D9%8A%D8%AF-%D8%A7%D9%84%D8%AD%D9%84%D9%82%D8%A9-1-%D8%A8%D8%AF%D9%88%D9%86-%D9%85%D9%88%D8%B3%D9%8A%D9%82%D9%89-full-hd_M7IRXC9hbBjyWRg.html/list/txiqlBFaSRu3JBM" class="card-link" data-type="series" data-genre="drama">
+  <div class="card">
+    <img src="https://ia801803.us.archive.org/24/items/1000056625-7-11zon/1000056643_5_11zon.jpg" alt="ريمي الفتى الشريد" loading="eager">
+    <div class="card-content">
+      <h3>ريمي الفتى الشريد</h3>
+      <p>مكتمل</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/watch/%D8%B5%D8%A7%D8%AD%D8%A8-%D8%A7%D9%84%D8%B8%D9%84-%D8%A7%D9%84%D8%B7%D9%88%D9%8A%D9%84-%D8%A7%D9%84%D8%AD%D9%84%D9%82%D8%A9-1-%D8%A8%D8%AF%D9%88%D9%86-%D9%85%D9%88%D8%B3%D9%8A%D9%82%D9%89_7SdkrnDwFgBiOmr.html/list/SrsAQi5ioz2jLxm" class="card-link" data-type="series" data-genre="drama">
+  <div class="card">
+    <img src="https://dn721503.ca.archive.org/0/items/1000056625-7-11zon/1000056644_4_11zon.jpg" alt="صاحب الظل الطويل" loading="eager">
+    <div class="card-content">
+      <h3>صاحب الظل الطويل</h3>
+      <p>مكتمل</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/watch/%D9%83%D8%B1%D8%AA%D9%88%D9%86-%D9%84%D9%88%D8%B2-%D9%88%D8%B3%D9%83%D8%B1-%D8%A7%D9%84%D8%AD%D9%84%D9%82%D8%A9-1-%D8%A8%D8%AF%D9%88%D9%86-%D9%85%D9%88%D8%B3%D9%8A%D9%82%D9%89-%D8%AC%D9%88%D8%AF%D8%A9-%D8%B9%D8%A7%D9%84%D9%8A%D8%A9-1080_vDVOxkSwuDPR4jj.html/list/dgj4GRF5ezBo4vf" class="card-link" data-type="series" data-genre="adventure">
+  <div class="card">
+    <img src="https://dn721503.ca.archive.org/0/items/1000056625-7-11zon/1000056645_3_11zon.jpg" alt="لوز وسكر" loading="eager">
+    <div class="card-content">
+      <h3>لوز وسكر</h3>
+      <p>مكتمل</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/watch/%D9%83%D8%B1%D8%AA%D9%88%D9%86-%D8%A7%D9%84%D9%88%D9%85%D9%8A%D8%B6-%D8%A7%D9%84%D8%A3%D8%B2%D8%B1%D9%82-%D8%A7%D9%84%D8%AD%D9%84%D9%82%D8%A9-1-%D8%A8%D8%AF%D9%88%D9%86-%D9%85%D9%88%D8%B3%D9%8A%D9%82%D9%89-hd_KkDQSjZSDiNu7cu.html/list/q5OpL4lvAuDwEMU" class="card-link" data-type="series" data-genre="adventure">
+  <div class="card">
+    <img src="https://dn721503.ca.archive.org/0/items/1000056625-7-11zon/1000056626_6_11zon.jpg" alt="الوميض الازرق" loading="eager">
+    <div class="card-content">
+      <h3>الوميض الازرق</h3>
+      <p>مكتمل</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/watch/%D9%83%D8%B1%D8%AA%D9%88%D9%86-%D8%AD%D9%83%D8%A7%D9%8A%D8%A7%D8%AA-%D9%84%D8%A7-%D8%AA%D9%86%D8%B3%D9%89-%D8%AA%D8%B9%D9%84%D9%85-%D9%85%D9%86-%D8%A7%D9%84%D9%86%D9%85%D9%84-%D8%A3%D9%8A%D9%87%D8%A7-%D8%A7%D9%84%D9%83%D8%B3%D9%84%D8%A7%D9%86-%D8%A8%D8%AF%D9%88%D9%86-%D9%85%D9%88%D8%B3%D9%8A%D9%82%D9%89-full-hd-%D8%A7%D9%84%D8%AD%D9%84%D9%82%D8%A9-%D8%A7%D9%84%D8%A3%D9%88%D9%84%D9%89-1_BunvQR7BIJRTDjO.html/list/sdICuXSJmLuOOgK" class="card-link" data-type="series" data-genre="adventure">
+  <div class="card">
+    <img src="https://dn721503.ca.archive.org/0/items/1000056625-7-11zon/1000056492_12_11zon.jpg" alt="حكايات لا تنسى" loading="eager">
+    <div class="card-content">
+      <h3>حكايات لا تنسى</h3>
+      <p> </p>
+    </div>
+  </div>
+</a>
+<a href="https://www.abwabgo.com/watch/%D9%83%D8%B1%D8%AA%D9%88%D9%86-%D8%AF%D9%85%D8%AA%D9%85-%D8%B3%D8%A7%D9%84%D9%85%D9%8A%D9%86-1-%D8%A8%D8%B7%D9%84-%D8%A7%D9%84%D8%AA%D9%88%D9%81%D9%8A%D8%B1-%D8%A8%D8%AF%D9%88%D9%86-%D9%85%D9%88%D8%B3%D9%8A%D9%82%D9%89_SlsiJptQQFnHInT.html/list/2RFgUHcGys9X38K" class="card-link" data-type="series" data-genre="Educational">
+  <div class="card">
+    <img src="https://archive.org/download/1000056625-7-11zon/%D8%AF%D9%85%D8%AA%D9%85%20%D8%B3%D8%A7%D9%84%D9%85%D9%8A%D9%86.jpg" alt="دمتم سالمين" loading="eager">
+    <div class="card-content">
+      <h3>دمتم سالمين</h3>
+      <p> </p>
+    </div>
+  </div>
+</a>
+<a href="https://www.abwabgo.com/watch/%D9%83%D8%B1%D8%AA%D9%88%D9%86-%D8%A5%D9%83%D8%AA%D8%B4%D9%81-%D9%85%D8%B9-%D8%AD%D9%85%D8%AF-%D8%A7%D9%84%D8%AD%D9%84%D9%82%D8%A9-1-%D8%A7%D9%84%D8%B5%D9%8A%D8%AF-%D8%A8%D8%AF%D9%88%D9%86-%D9%85%D9%88%D8%B3%D9%8A%D9%82%D9%89_NqdiPXvNlS1hgt4.html/list/KDgtK5rAd2piZWo" class="card-link" data-type="series" data-genre="Educational">
+  <div class="card">
+    <img src="https://archive.org/download/1000056625-7-11zon/%D8%AD%D9%85%D8%AF.jpg" alt="تعلم مع حمد" loading="eager">
+    <div class="card-content">
+      <h3>تعلم مع حمد</h3>
+      <p>مكتمل</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/watch/%D8%A8%D9%8A%D8%A8%D9%8A-%D8%A8%D8%A7%D8%B5-%D8%A7%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A9-%D8%A7%D9%84%D8%B6%D8%AE%D9%85%D8%A9-%D9%88%D8%B1%D8%B4%D8%A9-%D8%A7%D9%84%D8%A7%D8%B5%D9%84%D8%A7%D8%AD-%D8%A8%D8%AF%D9%88%D9%86-%D9%85%D9%88%D8%B3%D9%8A%D9%82%D9%89-baby-bus-%D8%A8%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%8A-full-hd_oSiQyqNF2olqa7S.html/list/nxwlLy4gJlCULrK" class="card-link" data-type="series" data-genre="Educational">
+  <div class="card">
+    <img src="https://archive.org/download/1000056625-7-11zon/%D8%A8%D9%8A%D8%A8%D9%8A%20%D8%A8%D8%A7%D8%B5.jpg" alt="بيبي باص" loading="eager">
+    <div class="card-content">
+      <h3>بيبي باص</h3>
+      <p> </p>
+    </div>
+  </div>
+</a>
+        <!-- ... up to 20 بطاقة -->
+      </div>
+    </section>
+
+    <section id="movies" style="display:none">
+      <h2>الأفلام</h2>
+      <div class="grid" id="items-movies">
+        <!-- مثال بطاقة فيلم -->
+        <a href="https://www.abwabgo.com/v/sFYDyF" class="card-link" data-type="movies" data-genre="adventure">
+  <div class="card">
+    <img src="https://www.abwabgo.com/upload/photos/2024/06/da4mM8IUhfgsZABH4WWu_28_86fa3684aea84ff67468149ac7a9bda1_image.png" alt="فوكس الرائع" loading="eager">
+    <div class="card-content">
+      <h3>فوكس الرائع</h3>
+      <p> </p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/v/BNJ7OX" class="card-link" data-type="movies" data-genre="action">
+  <div class="card">
+    <img src="https://i.ytimg.com/vi/MAgxaGYUgFQ/maxresdefault.jpg" alt="الموجة المنعزلة" loading="eager">
+    <div class="card-content">
+      <h3>الموجة المنعزلة</h3>
+      <p> </p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/v/qV8F1g" class="card-link" data-type="movies" data-genre="adventure">
+  <div class="card">
+    <img src="https://www.abwabgo.com/upload/photos/2024/11/iRl3xuRcuR5dPYm5vQmF_30_ee0e39a7aabc5d1008bd8b5f3ad4a769_image.jpg" alt="نيزك في وادي الأمان" loading="eager">
+    <div class="card-content">
+      <h3>نيزك في وادي الأمان</h3>
+      <p> </p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/v/NiZU52" class="card-link" data-type="movies" data-genre="action">
+  <div class="card">
+    <img src="https://www.abwabgo.com/upload/photos/2025/04/liv1JYLbOAahkmqjVZtN_01_c20b167f602990a1248a2c045a7fdc28_image.jpg" alt="سبيريت" loading="eager">
+    <div class="card-content">
+      <h3>سبيريت</h3>
+      <p> </p>
+    </div>
+  </div>
+</a>
+<a href="https://www.abwabgo.com/v/QrJ5hB" class="card-link" data-type="movies" data-genre="action">
+  <div class="card">
+    <img src="https://www.abwabgo.com/upload/photos/2024/05/BeHrTaT16sJ66jQyaC3m_23_a05ab161b0f3a49ef38ba163790b79a0_image.jpg" alt="قلعة في السماء _ الجزء الثاني" loading="eager">
+    <div class="card-content">
+      <h3>قلعة في السماء _ الجزء الثاني</h3>
+      <p>1986</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/v/waQ9it" class="card-link" data-type="movies" data-genre="action">
+  <div class="card">
+    <img src="https://www.abwabgo.com/upload/photos/2024/05/BeHrTaT16sJ66jQyaC3m_23_a05ab161b0f3a49ef38ba163790b79a0_image.jpg" alt="قلعة في السماء _ الجزء الأول" loading="eager">
+    <div class="card-content">
+      <h3>قلعة في السماء _ الجزء الأول</h3>
+      <p>1986</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/v/uRwKZZ" class="card-link" data-type="movies" data-genre="adventure">
+  <div class="card">
+    <img src="https://www.abwabgo.com/upload/photos/2024/04/cl7CCKZbZIQQsoI66K9K_14_3189527d8eee47bcec1ee55fc97e34fc_image.jpeg" alt="بوكيمون أسرار الأدغال" loading="eager">
+    <div class="card-content">
+      <h3>بوكيمون أسرار الأدغال</h3>
+      <p>2020</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/v/avdONW" class="card-link" data-type="movies" data-genre="action">
+  <div class="card">
+    <img src="https://www.abwabgo.com/upload/photos/2024/01/XhypodWsTOiO2IRztk4j_28_08818dcae5aeb0364bd9a980072622b4_image.png" alt="كونان | لحن وداع المحققين _ الجزء الثاني" loading="eager">
+    <div class="card-content">
+      <h3>كونان | لحن وداع المحققين _ الجزء الثاني</h3>
+      <p> </p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/v/LgMN1n" class="card-link" data-type="movies" data-genre="action">
+  <div class="card">
+    <img src="https://www.abwabgo.com/upload/photos/2024/01/3oNV23DwmyZJs8KFOFXc_27_24331a46bea4fd84b0fe731d157a178f_image.png" alt="كونان | لحن وداع المحققين _ الجزء الأول" loading="eager">
+    <div class="card-content">
+      <h3>كونان | لحن وداع المحققين _ الجزء الأول</h3>
+      <p> </p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/v/GpolLj" class="card-link" data-type="movies" data-genre="adventure">
+  <div class="card">
+    <img src="https://www.abwabgo.com/upload/photos/2023/08/ZgcJnmSyO9BDwVSHnmoA_17_80647925100420b7e5003d44c52b0825_image.jpg" alt="ويني الدبدوب | المغامرات العديدة" loading="eager">
+    <div class="card-content">
+      <h3>ويني الدبدوب | المغامرات العديدة</h3>
+      <p>1971</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/v/JX4wHa" class="card-link" data-type="movies" data-genre="adventure">
+  <div class="card">
+    <img src="https://i.ytimg.com/vi/9AWneZjrdsM/maxresdefault.jpg" alt="لاكي لوك وعصابة الدالتون" loading="eager">
+    <div class="card-content">
+      <h3>لاكي لوك وعصابة الدالتون</h3>
+      <p>1983</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/v/dKE7PB" class="card-link" data-type="movies" data-genre="adventure">
+  <div class="card">
+    <img src="https://www.abwabgo.com/upload/photos/2023/09/SqoTRQcdENwjTTiSETbO_07_9f3f666eb20aa288e623d04ca419a140_image.jpg" alt="العودة إلى الغابة" loading="eager">
+    <div class="card-content">
+      <h3>العودة إلى الغابة</h3>
+      <p>2021</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/v/6ynnnj" class="card-link" data-type="movies" data-genre="adventure">
+  <div class="card">
+    <img src="https://i.ytimg.com/vi/NxZVaL7jZ8k/maxresdefault.jpg" alt="بامسي ومدينة اللصوص" loading="eager">
+    <div class="card-content">
+      <h3>بامسي ومدينة اللصوص</h3>
+      <p>2020</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/v/4RXlQP" class="card-link" data-type="movies" data-genre="adventure">
+  <div class="card">
+    <img src="https://www.abwabgo.com/upload/photos/2023/09/zGfpChkm2a3HeJwAFQKp_07_f988833630ca7d2b9330bec01595ef9e_image.jpg" alt="تومي وأوسكار" loading="eager">
+    <div class="card-content">
+      <h3>تومي وأوسكار</h3>
+      <p>2000</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/v/GwMoNe" class="card-link" data-type="movies" data-genre="adventure">
+  <div class="card">
+    <img src="https://www.abwabgo.com/upload/photos/2024/04/ezsF9u2SHj6LlIZI2ulh_10_c5f0610f13c165799a6b0fe487eecc40_image.png" alt="30 ألف ميل تحت سطح البحر" loading="eager">
+    <div class="card-content">
+      <h3>30 ألف ميل تحت سطح البحر</h3>
+      <p>1970</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/v/4JvwOz" class="card-link" data-type="movies" data-genre="adventure">
+  <div class="card">
+    <img src="https://i.ytimg.com/vi/2hOEAK2mh7o/mqdefault.jpg" alt="كليلة ودمنة" loading="eager">
+    <div class="card-content">
+      <h3>كليلة ودمنة</h3>
+      <p>2006</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/v/gOlBe2" class="card-link" data-type="movies" data-genre="adventure">
+  <div class="card">
+    <img src="https://i.ytimg.com/vi/R5pOg4cTnWw/mqdefault.jpg" alt=" ويني الدبدوب" loading="eager">
+    <div class="card-content">
+      <h3> ويني الدبدوب</h3>
+      <p>2011</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/v/MZWQ9o" class="card-link" data-type="movies" data-genre="adventure">
+  <div class="card">
+    <img src="https://i.ytimg.com/vi/X1uYRE4LnoA/mqdefault.jpg" alt="تحت الانفاق الأرضية | الجزء الثالث | سيمبا" loading="eager">
+    <div class="card-content">
+      <h3>تحت الانفاق الأرضية | الجزء الثالث | سيمبا</h3>
+      <p> </p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/v/qRHYxE" class="card-link" data-type="movies" data-genre="adventure">
+  <div class="card">
+    <img src="https://i.ytimg.com/vi/1dM4gNPz8To/mqdefault.jpg" alt="تحت الانفاق الأرضية | الجزء الثاني | سيمبا" loading="eager">
+    <div class="card-content">
+      <h3>تحت الانفاق الأرضية | الجزء الثاني | سيمبا</h3>
+      <p> </p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/v/OZB4rM" class="card-link" data-type="movies" data-genre="adventure">
+  <div class="card">
+    <img src="https://i.ytimg.com/vi/nmjhwFPL4mk/mqdefault.jpg" alt="تحت الانفاق الأرضية | الجزء الأول | سيمبا" loading="eager">
+    <div class="card-content">
+      <h3>تحت الانفاق الأرضية | الجزء الأول | سيمبا</h3>
+      <p> </p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/v/1K7FTF" class="card-link" data-type="movies" data-genre="adventure">
+  <div class="card">
+    <img src="https://i.ytimg.com/vi/5LKtozOyoMs/mqdefault.jpg" alt="فتى الادغال-ماوكلي" loading="eager">
+    <div class="card-content">
+      <h3>فتى الادغال-ماوكلي</h3>
+      <p> </p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/v/amJTzi" class="card-link" data-type="movies" data-genre="adventure">
+  <div class="card">
+    <img src="https://i.ytimg.com/vi/z-myQzOmkoA/sddefault.jpg" alt="مغامرة في عالم الحيوانات المفترسة" loading="eager">
+    <div class="card-content">
+      <h3>مغامرة في عالم الحيوانات المفترسة</h3>
+      <p> </p>
+    </div>
+  </div>
+</a>
+
+<a href="https://www.abwabgo.com/v/rNiR9Q" class="card-link" data-type="movies" data-genre="adventure">
+  <div class="card">
+    <img src="https://i.ytimg.com/vi/eTf6jFBSWLs/maxresdefault.jpg" alt="الثعلب الأزرق" loading="eager">
+    <div class="card-content">
+      <h3>الثعلب الأزرق</h3>
+      <p> </p>
+    </div>
+  </div>
+</a>
+<a href="https://www.abwabgo.com/watch/%D9%81%D9%8A%D9%84%D9%85-%D9%83%D8%B1%D8%AA%D9%88%D9%86-%D8%A7%D9%84%D8%A3%D8%B5%D8%AF%D9%82%D8%A7%D8%A1-%D8%A7%D9%84%D8%AB%D9%84%D8%A7%D8%AB%D8%A9-%D9%88%D8%AD%D8%B1%D9%88%D9%81-%D8%A7%D9%84%D9%87%D8%AC%D8%A7%D8%A1-%D8%A7%D9%84%D8%AC%D8%B2%D8%A1-%D8%A7%D9%84%D8%A7%D9%88%D9%84-%D8%A3-%D8%B0_llVhhzSsewHPLyT.html/list/4UcPNIhiIRYI7RS" class="card-link" data-type="movies" data-genre="Educational">
+  <div class="card">
+    <img src="https://i.ytimg.com/vi/jKHDtMu0qsM/hqdefault.jpg" alt="الأصدقاء الثلاثة وحروف الهجاء" loading="eager">
+    <div class="card-content">
+      <h3>الأصدقاء الثلاثة وحروف الهجاء</h3>
+      <p>ثلاثة أفلام</p>
+    </div>
+  </div>
+</a>
+        <!-- ... up to 20 بطاقة -->
+      </div>
+    </section>
+
+    <div class="pagination" id="pagination"></div>
+  </main>
+
+  <script>
+    // Decode and set real src on every <img data-src>
+    function decryptImages() {
+      document.querySelectorAll('img[data-src]').forEach(img => {
+        try {
+          img.src = atob(img.getAttribute('data-src'));
+        } catch(e) {
+          console.error('Invalid base64 in data-src:', e);
+        }
+      });
+    }
+
+    let currentPage = 1;
+    const perPage = 20;
+    const searchInput = document.getElementById('search');
+    const genreSelect = document.getElementById('genreSelect');
+    const buttons = document.querySelectorAll('.controls button[data-type]');
+    const sections = {
+      series: document.getElementById('series'),
+      movies: document.getElementById('movies')
+    };
+
+    function init() {
+      decryptImages();
+      buttons.forEach(btn => btn.addEventListener('click', switchSection));
+      searchInput.addEventListener('input', update);
+      genreSelect.addEventListener('change', update);
+      update();
+    }
+
+    function switchSection(e) {
+      buttons.forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      sections.series.style.display = e.target.dataset.type === 'series' ? '' : 'none';
+      sections.movies.style.display = e.target.dataset.type === 'movies' ? '' : 'none';
+      currentPage = 1;
+      update();
+    }
+
+   function update() {
+  const term  = searchInput.value.trim().toLowerCase();
+  const genre = genreSelect.value;
+  const allCards = Array.from(document.querySelectorAll('.card-link'));
+  const paginationEl = document.getElementById('pagination');
+
+  // 1) حالة البحث بالنص أو اختيار تصنيف محدد => عرض كلا القسمين بدون Pagination
+  if (term || genre !== 'all') {
+    // عرض المسلسلات والأفلام معاً
+    sections.series.style.display = '';
+    sections.movies.style.display = '';
+    paginationEl.style.display = 'none';
+
+    allCards.forEach(link => {
+      const title = link.querySelector('h3').textContent.toLowerCase();
+      const desc  = link.querySelector('p').textContent.toLowerCase();
+      const g     = link.dataset.genre;
+      const match = (genre === 'all' || g === genre)
+                 && (term === '' || title.includes(term) || desc.includes(term));
+      link.style.display = match ? 'block' : 'none';
+    });
+
+  } else {
+    // 2) الوضع الطبيعي: عرض القسم النشط فقط مع Pagination
+    paginationEl.style.display = '';
+    const active = document.querySelector('.controls button.active').dataset.type;
+    const cardsOfType = allCards.filter(link => link.dataset.type === active);
+    const filtered = cardsOfType.filter(link => {
+      const g = link.dataset.genre;
+      // هنا لا يوجد term و genre === 'all'
+      return true;
+    });
+    paginate(filtered);
+  }
+}
+
+
+    function paginate(items) {
+      const totalPages = Math.ceil(items.length / perPage) || 1;
+      const start = (currentPage -1) * perPage;
+      const pageItems = items.slice(start, start + perPage);
+      // hide all, then show only paginated
+      document.querySelectorAll('.card-link').forEach(c => c.style.display = 'none');
+      pageItems.forEach(c => c.style.display = 'block');
+      renderPagination(totalPages);
+    }
+
+    function renderPagination(totalPages) {
+      const container = document.getElementById('pagination');
+      container.innerHTML = '';
+      const makeBtn = (txt, pg, disabled) => {
+        const btn = document.createElement('button');
+        btn.textContent = txt;
+        if (disabled) btn.disabled = true;
+        btn.addEventListener('click', ()=>{ currentPage = pg; update(); });
+        if (!isNaN(txt) && currentPage === pg) btn.classList.add('active');
+        return btn;
+      };
+      container.append(
+        makeBtn('<<', 1, currentPage===1),
+        makeBtn('<', currentPage-1, currentPage===1)
+      );
+      for (let i=1; i<= totalPages; i++) {
+        container.append(makeBtn(i, i, false));
+      }
+      container.append(
+        makeBtn('>', currentPage+1, currentPage===totalPages),
+        makeBtn('>>', totalPages, currentPage===totalPages)
+      );
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="pt_movie_margin">
+	<div class="vp_pop_chnl_filt_hd">
+		<h4 class="ptitle">
+			<div><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24"><path fill="currentColor" d="M18,9H16V7H18M18,13H16V11H18M18,17H16V15H18M8,9H6V7H8M8,13H6V11H8M8,17H6V15H8M18,3V5H16V3H8V5H6V3H4V21H6V19H8V21H16V19H18V21H20V3H18Z"></path></svg></div> {{LANG movies}}
+		</h4>
+		<div class="vid_pop_chnl_filtr">
+			<span>{{LANG filter_by}}</span>
+			<div class="dropdown vid_movie_filter">
+				<a href="#" class="dropdown-toggle btn btn_primary_rev" data-toggle="dropdown" role="button" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M6,13H18V11H6M3,6V8H21V6M10,18H14V16H10V18Z"></path></svg></a>
+				<ul class="dropdown-menu dropdown-menu-right" role="menu">
+					<form class="search_filter_form vp_forms" method="GET" action="{{LINK movies}}">
+						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="vid_movie_filter_close"><path fill="currentColor" d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"></path></svg>
+						<h2 class="user_sttng_panel_hd">{{LANG filter_by}}</h2>
+						<div class="pp_mat_input">
+							<input type="text" name="keyword" id="keyword" placeholder="{{LANG movies_page_search}}" value="<?php echo(!empty($_GET['keyword']) ? $_GET['keyword'] : '') ?>">
+							<label for="keyword">{{LANG movies_page_search}}</label>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="pp_mat_input">
+									<input type="number" name="rating" id="rating" placeholder="{{LANG rating}}" min="1" max="10" step="0.1" value="<?php echo(!empty($_GET['rating']) ? $_GET['rating'] : '') ?>">
+									<label for="rating">{{LANG rating}}</label>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="pp_mat_input">
+									<input type="number" name="release" id="release" placeholder="{{LANG release}}" min="1960" max="<?php echo date('Y') ?>" value="<?php echo(!empty($_GET['release']) ? $_GET['release'] : '') ?>">
+									<label for="release">{{LANG release}}</label>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="pp_mat_input">
+									<select class="pp_select_has_label" id="country" name="country">
+										<?php foreach ($countries_name as $key => $value) { $selected = (!empty($_GET['country']) && $_GET['country'] == $key) ? 'selected' : '';  ?>
+											<option value="<?php echo $key; ?>" <?php echo $selected?>><?php echo $value; ?></option>
+										<?php  } ?>
+									</select>
+									<label for="country">{{LANG country}}</label>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="pp_mat_input">
+									<select class="pp_select_has_label" id="category_" name="category_">
+										<option value="all" <?php echo !empty($_GET['category_']) && $_GET['category_'] == 'all' ? 'selected' : '' ?>>{{LANG all}}</option>
+										<?php foreach ($pt->movies_categories as $key => $category) { $selected = (!empty($_GET['category_']) && $_GET['category_'] == $key) ? 'selected' : '';  ?>
+											<option value="<?php echo $key; ?>" <?php echo $selected?>><?php echo $category; ?></option>
+										<?php  } ?>
+									</select>
+									<label for="category_">{{LANG category}}</label>
+								</div>
+							</div>
+						</div>
+						<input type="hidden" name="page_id" value="1" id="page_id">
+						<input type="hidden" name="last_page" value="" id="last_page">
+						<div class="vp_forms_sbm_btn text-center">
+							<button class="btn btn_primary" id="submit"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" /></svg> {{LANG search}}</button>
+						</div>
+					</form>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="vid_movie_cont">
+		{{VIDEOS}}
+	</div>
+	<?php if ($pt->total_pages > 1) { ?>
+		<!--<div class="pull-left showing_pages">
+			<?php echo "Showing $pt->page_number out of " . $pt->total_pages; ?>
+		</div>-->
+		<div class="text-center">
+			<nav class="showing_nav movies_pagntn">
+				<a href="javascript:void(0)" class="btn" title='First Page' onclick="GoToPage(1)">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" /></svg>
+				</a>
+				<ul class="pagination">
+					<?php if ($pt->page_number > 1) {  ?>
+						<li>
+							<a href="javascript:void(0)" onclick="GoToPage(<?php echo($pt->page_number - 1) ?>)" title='Previous Page'>
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" /></svg>
+							</a>
+						</li>
+					<?php  } ?>
+					<?php 
+						$nums = 0;
+						$nums_pages = ($pt->page_number > 3) ? ($pt->page_number - 3) : $pt->page_number;
+						for ($i=$nums_pages; $i <= $pt->total_pages; $i++) { 
+							if ($nums < 4) {
+						?>
+							<li class="<?php echo ($pt->page_number == $i) ? 'active' : ''; ?>"><a href="javascript:void(0)" onclick="GoToPage(<?php echo($i); ?>)"><?php echo $i ?></a></li>
+					<?php } $nums++; } ?>
+					<?php if ($pt->total_pages > $pt->page_number) { ?>
+						<li>
+							<a href="javascript:void(0)" onclick="GoToPage(<?php echo ($pt->page_number + 1); ?>)" title="Next Page">
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" /></svg>
+							</a>
+						</li>
+					<?php } ?>
+				</ul>
+				<a href="javascript:void(0)" onclick="GoToPage(<?php echo($pt->total_pages) ?>,1)" class="btn" title='Last Page'>
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z" /></svg>
+				</a>
+			</nav>
+		</div>
+	<?php } ?>
+</div>
+
+<script type="text/javascript">
+if ('loading' in HTMLImageElement.prototype) {
+    const images = document.querySelectorAll('img[loading="lazy"]');
+    images.forEach(img => {
+		img.src = img.dataset.src;
+    });
+} else {
+    // Dynamically import the LazySizes library
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js';
+    document.body.appendChild(script);
+}
+
+$(".vid_movie_filter_close").click(function() {
+	$('.vid_movie_filter .dropdown-toggle').dropdown('toggle');
+});
+
+function GoToPage(page_id,last_page = '') {
+	$('#page_id').val(page_id);
+	$('#last_page').val(last_page);
+	$('#submit').click();
+}
+</script>

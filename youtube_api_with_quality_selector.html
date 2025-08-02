@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <title>مشغل YouTube مع اختيار الجودة</title>
+  <style>
+    body {
+      background-color: #111;
+      color: #fff;
+      font-family: sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    #player {
+      width: 100%;
+      max-width: 720px;
+      margin: 0 auto;
+      height: 405px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    #qualitySelector {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>مشغل YouTube مع زر اختيار الجودة</h2>
+
+  <div id="player"></div>
+
+  <select id="qualitySelector">
+    <option value="highres">2160p (4K)</option>
+    <option value="hd1080">1080p</option>
+    <option value="hd720">720p</option>
+    <option value="large">480p</option>
+    <option value="medium">360p</option>
+    <option value="small">240p</option>
+    <option value="tiny">144p</option>
+  </select>
+
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script>
+    var player;
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        height: '405',
+        width: '720',
+        videoId: 'rrVj2FkJV7s', // غيّر هذا بمعرّف الفيديو الخاص بك
+        playerVars: {
+          rel: 0,
+          modestbranding: 1,
+          showinfo: 0,
+          controls: 1
+        },
+        events: {
+          onReady: function () {
+            document.getElementById('qualitySelector').addEventListener('change', function () {
+              var selectedQuality = this.value;
+              player.setPlaybackQuality(selectedQuality);
+            });
+          }
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>

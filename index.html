@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>مولد بطاقات مسلسلات وأفلام</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family:'Cairo',sans-serif; background:#f4f4f4; color:#333; padding:1rem; }
+    .container { max-width:800px; margin:auto; background:#fff; padding:1rem; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+    h1 { text-align:center; color:#222; }
+    form > div { margin-bottom:0.75rem; }
+    label { display:block; margin-bottom:0.25rem; font-weight:bold; }
+    input[type=text], textarea, select { width:100%; padding:0.5rem; border:1px solid #ccc; border-radius:4px; }
+    textarea { resize:vertical; }
+    button { padding:0.5rem 1rem; background:#007bff; color:#fff; border:none; border-radius:4px; cursor:pointer; }
+    button:hover { background:#0056b3; }
+    .preview, .code-output { margin-top:1rem; }
+    .grid { display:grid; grid-template-columns:1fr; gap:0.5rem; }
+    .card-link { border:1px solid #ddd; padding:0.5rem; border-radius:4px; display:flex; gap:0.5rem; }
+    .card-link img { width:80px; height:60px; object-fit:cover; border-radius:4px; }
+    .card-content h3 { margin:0 0 0.25rem; font-size:1rem; }
+    pre { background:#f0f0f0; padding:1rem; border-radius:4px; overflow-x:auto; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>مولد بطاقة مسلسل/فيلم</h1>
+    <form id="cardForm">
+      <div>
+        <label for="typeSelect">النوع</label>
+        <select id="typeSelect">
+          <option value="series">مسلسل</option>
+          <option value="movies">فيلم</option>
+        </select>
+      </div>
+      <div>
+        <label for="titleInput">الاسم</label>
+        <input type="text" id="titleInput" required>
+      </div>
+      <div>
+        <label for="descInput">الوصف</label>
+        <textarea id="descInput" rows="2" required></textarea>
+      </div>
+      <div>
+        <label for="imgInput">رابط الصورة</label>
+        <input type="text" id="imgInput" required>
+      </div>
+      <div>
+        <label for="linkInput">رابط المحتوى</label>
+        <input type="text" id="linkInput" required>
+      </div>
+      <div>
+        <label for="genreSelect">التصنيف</label>
+        <select id="genreSelect">
+          <option value="action">أكشن</option>
+          <option value="Educational">تعليمي - أطفال</option>
+          <option value="Purposeful">هادف</option>                      
+          <option value="adventure">مغامرات</option>
+          <option value="drama">دراما</option>
+        </select>
+        <input type="text" id="newGenreInput" placeholder="لإضافة تصنيف جديد اكتب هنا ثم اضغط إضافي" style="margin-top:0.5rem;">
+        <button type="button" id="addGenreBtn" style="background:#28a745;margin-top:0.25rem;">إضافة تصنيف</button>
+      </div>
+      <button type="submit">إضافة البطاقة</button>
+    </form>
+
+    <div class="preview">
+      <h2>المعاينة</h2>
+      <div class="grid" id="previewGrid"></div>
+    </div>
+
+    <div class="code-output">
+      <h2>الكود الناتج</h2>
+      <pre id="codeBlock"></pre>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('cardForm');
+    const previewGrid = document.getElementById('previewGrid');
+    const codeBlock = document.getElementById('codeBlock');
+    const genreSelect = document.getElementById('genreSelect');
+    const newGenreInput = document.getElementById('newGenreInput');
+    const addGenreBtn = document.getElementById('addGenreBtn');
+
+    let cards = [];
+
+    addGenreBtn.addEventListener('click', () => {
+      const val = newGenreInput.value.trim();
+      if (val && ![...genreSelect.options].some(o => o.value === val)) {
+        const op = document.createElement('option'); op.value = val; op.textContent = val;
+        genreSelect.appendChild(op);
+        newGenreInput.value = '';
+      }
+    });
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const type = document.getElementById('typeSelect').value;
+      const title = document.getElementById('titleInput').value;
+      const desc  = document.getElementById('descInput').value;
+      const img   = document.getElementById('imgInput').value;
+      const link  = document.getElementById('linkInput').value;
+      const genre = genreSelect.value;
+      const card = { type, title, desc, img, link, genre };
+      cards.push(card);
+      renderPreview();
+      renderCode();
+      // حذف form.reset(); لإبقاء القيم في الحقول للتعديل
+    });
+
+    function renderPreview() {
+      previewGrid.innerHTML = '';
+      cards.forEach(c => {
+        const a = document.createElement('a');
+        a.href = c.link; a.className='card-link'; a.dataset.type=c.type; a.dataset.genre=c.genre;
+        a.innerHTML = `<div class="card"><img src="${c.img}" alt=""><div class="card-content"><h3>${c.title}</h3><p>${c.desc}</p></div></div>`;
+        previewGrid.appendChild(a);
+      });
+    }
+
+    function renderCode() {
+      let html = '';
+      cards.forEach(c => {
+        html += `<a href=\"${c.link}\" class=\"card-link\" data-type=\"${c.type}\" data-genre=\"${c.genre}\">` +
+                `\n  <div class=\"card\">` +
+                `\n    <img src=\"${c.img}\" alt=\"${c.title}\" loading=\"eager\">` +
+                `\n    <div class=\"card-content\">` +
+                `\n      <h3>${c.title}</h3>` +
+                `\n      <p>${c.desc}</p>` +
+                `\n    </div>` +
+                `\n  </div>` +
+                `\n</a>\n\n`;
+      });
+      codeBlock.textContent = html.trim();
+    }
+  </script>
+</body>
+</html>

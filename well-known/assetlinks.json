@@ -1,0 +1,15 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls",
+      "delegate_permission/common.get_login_creds"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.abwabgo.app",
+      "sha256_cert_fingerprints": [
+        "C8:5C:8A:1B:3F:3D:4B:15:61:03:3D:40:36:46:39:84:2F:08:76:DE:97:61:66:62:8D:DE:53:2A:C2:13:50:FA"
+      ]
+    }
+  }
+]
